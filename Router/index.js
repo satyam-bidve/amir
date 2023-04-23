@@ -37,18 +37,29 @@ router.post("/addTask", async (req, res) => {
   }
 });
 
-router.get("/getData",async (req,res)=>{
+router.get("/getData", async (req, res) => {
   try {
-
-    const {key}= req.body
-    if(!key){
-      const data = await Task.find({})
-      res.status(200).send(data)
+    const { key } = req.body;
+    if (!key) {
+      const data = await Task.find({});
+      res.status(200).send(data);
+    } else {
+      const data = await Task.find({
+        $or: [
+          { primarytext: { $regex: key, $options: "i" } },
+          { name: { $regex: key, $options: "i" } },
+          { headline: { $regex: key, $options: "i" } },
+          { description: { $regex: key, $options: "i" } },
+        ],
+      });
+      const data1 = await Task1.find({
+        $or: [{ name: { $regex: key, $options: "i" } }],
+      });
+      res.status(200).send({ data: data, data1: data1 });
     }
-    
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 module.exports = router;
