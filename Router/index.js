@@ -24,7 +24,7 @@ router.post("/addTask", async (req, res) => {
       cta,
       imageurl,
     });
-    await saveTask();
+    await saveTask.save();
     const saveTask1 = await Task1({
       companyId,
       name,
@@ -36,5 +36,19 @@ router.post("/addTask", async (req, res) => {
     console.log(error);
   }
 });
+
+router.get("/getData",async (req,res)=>{
+  try {
+
+    const {key}= req.body
+    if(!key){
+      const data = await Task.find({})
+      res.status(200).send(data)
+    }
+    
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 module.exports = router;
